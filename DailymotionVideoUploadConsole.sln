@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailymotionVideoUploadConsole", "DailymotionVideoUploadConsole\DailymotionVideoUploadConsole.csproj", "{210F35C5-594F-4526-955D-578888185D57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{210F35C5-594F-4526-955D-578888185D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{210F35C5-594F-4526-955D-578888185D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{210F35C5-594F-4526-955D-578888185D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{210F35C5-594F-4526-955D-578888185D57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5DDD6225-65F7-48E0-8DB6-A911E6FCF892}
+	EndGlobalSection
+EndGlobal
