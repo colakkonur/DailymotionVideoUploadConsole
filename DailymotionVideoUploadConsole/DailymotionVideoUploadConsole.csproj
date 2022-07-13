@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiObject.cs" />
+    <Compile Include="ApiErrorObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

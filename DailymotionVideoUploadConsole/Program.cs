@@ -11,10 +11,10 @@ namespace DailymotionVideoUploadConsole
 {
     internal class Program
     {
+        public static string Bearer = "Bearer eGFeQC0jEkx1CkNxJEtLQQgMAC8HSgQvFUVYBXMIUCga";
         static void Main(string[] args)
         {
             FileInfo();
-            
         }
         
         private static void FileInfo()
@@ -24,23 +24,22 @@ namespace DailymotionVideoUploadConsole
 
             foreach (var item in DI.GetFiles())
             {
-                Console.WriteLine("Klasör --> " + @"C:\Users\Onur\Downloads\dmvideolar\" + " - Dosya Adi -->" + item.Name);
+                Console.WriteLine("Klasör --> " + @"C:\Users\Onur\Downloads\dmvideolar\" + " - Dosya Adı -->" + item.Name + " - Yükleme işlemi başladı...");
                 //return item.DirectoryName + "\\" + item.Name;
 
                 var vLocalVideoPath = item.DirectoryName + "\\" + item.Name;
 
                 var vVideoName = ValueClipping(item.Name);
                 var vVideoUrl = UploadUrl();
+                System.Threading.Thread.Sleep(1000);
                 var vAcilanUrl = UploadVideo(vVideoUrl, vLocalVideoPath);
+                System.Threading.Thread.Sleep(1000);
                 var vVideoId = CreateVideo(vAcilanUrl);
+                System.Threading.Thread.Sleep(1000);
                 PublishVideo(vVideoId, vVideoName, vVideoName,"example tag 1,example tag 2,example tag 3");
+                System.Threading.Thread.Sleep(1000);
                 FileMove(item.Name);
             }
-        }
-
-        private static void FileMove(string sUploadedVideoPath)
-        {
-            File.Move(@"C:\Users\Onur\Downloads\dmvideolar\"+ sUploadedVideoPath + "", @"C:\Users\Onur\Downloads\yuklenendmvideolar\" + sUploadedVideoPath + "");//Dosya kopyalanmaz komple taşınır.
         }
 
         private static string ValueClipping(string sValue)
@@ -62,11 +61,18 @@ namespace DailymotionVideoUploadConsole
             var client = new RestClient("https://api.dailymotion.com/file/upload");
             client.Options.Timeout = -1;
             var request = new RestRequest();
-            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
+            request.AddHeader("Authorization", Bearer);
             RestResponse response = client.Execute(request);
-            //Console.WriteLine(response.Content);
-
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
+            if ((int)response.StatusCode == 200)
+            {
+                Console.WriteLine("Durum --> " + " - (2) *UploadUrl* işlemi tamamlandı...");
+            }
+            else
+            {
+                Root Errorobj = JsonConvert.DeserializeObject<Root>(response.Content);
+                Console.WriteLine("Durum --> " + " - (2) *UploadUrl* işleminde Hata --> " + Errorobj.error.code + " - " + Errorobj.error.message);
+            }
             return obj.upload_url;
         }
 
@@ -78,9 +84,16 @@ namespace DailymotionVideoUploadConsole
             request.Method = Method.Post;
             request.AddFile("file", @""+sLocalVideoPath);
             RestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
+            if ((int)response.StatusCode == 200)
+            {
+                Console.WriteLine("Durum --> " + " - (3) *UploadVideo* işlemi tamamlandı...");
+            }
+            else
+            {
+                Root Errorobj = JsonConvert.DeserializeObject<Root>(response.Content);
+                Console.WriteLine("Durum --> " + " - (3) *UploadVideo* işleminde Hata --> " + Errorobj.error.code + " - " + Errorobj.error.message);
+            }
             return obj.url;
         }
 
@@ -90,14 +103,22 @@ namespace DailymotionVideoUploadConsole
             client.Options.Timeout = -1;
             var request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
+            request.AddHeader("Authorization", Bearer);
             request.AlwaysMultipartFormData = true;
             request.AddParameter("url", sAcilanUrl);
             RestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
+            if ((int)response.StatusCode == 200)
+            {
+                Console.WriteLine("Durum --> " + " - (4) *CreateVideo* işlemi tamamlandı...");
+            }
+            else
+            {
+                Root Errorobj = JsonConvert.DeserializeObject<Root>(response.Content);
+                Console.WriteLine("Durum --> " + " - (4) *CreateVideo* işleminde Hata --> " + Errorobj.error.code + " - " + Errorobj.error.message);
+            }
             return obj.id;
+            
         }
 
         public static void PublishVideo(string sVideoId, string sVideoTitle, string sVideoDescription, string sVideoTags)
@@ -106,7 +127,7 @@ namespace DailymotionVideoUploadConsole
             client.Options.Timeout = -1;
             var request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
+            request.AddHeader("Authorization", Bearer);
             request.AlwaysMultipartFormData = true;
             request.AddParameter("published", "true");
             request.AddParameter("title", sVideoTitle);
@@ -115,7 +136,21 @@ namespace DailymotionVideoUploadConsole
             request.AddParameter("channel", "tv");
             request.AddParameter("is_created_for_kids", "false");
             RestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
+            if ((int)response.StatusCode == 200)
+            {
+                Console.WriteLine("Durum --> " + " - (5) *PublishVideo* işlemi tamamlandı...");
+            }
+            else
+            {
+                Root Errorobj = JsonConvert.DeserializeObject<Root>(response.Content);
+                Console.WriteLine("Durum --> " + " - (5) *PublishVideo* işleminde Hata --> " + Errorobj.error.code + " - " + Errorobj.error.message);
+            }
+        }
+
+        private static void FileMove(string sUploadedVideoPath)
+        {
+            File.Move(@"C:\Users\Onur\Downloads\dmvideolar\" + sUploadedVideoPath + "", @"C:\Users\Onur\Downloads\yuklenendmvideolar\" + sUploadedVideoPath + "");//Dosya kopyalanmaz komple taşınır.
+            Console.WriteLine("Durum --> " + sUploadedVideoPath + " - Video 'Yüklenenler' klasörüne taşındı - Yükleme Tamamlandı.");
         }
     }
 }

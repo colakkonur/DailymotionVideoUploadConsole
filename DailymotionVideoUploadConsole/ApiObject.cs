@@ -18,5 +18,7 @@ namespace DailymotionVideoUploadConsole
         public string channel { get; set; }
         public string tags { get; set; }
         public string is_created_for_kids { get; set; }
+
+        
     }
 }
