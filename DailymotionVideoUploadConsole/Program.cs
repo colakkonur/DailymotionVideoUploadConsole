@@ -14,6 +14,7 @@ namespace DailymotionVideoUploadConsole
         static void Main(string[] args)
         {
             FileInfo();
+            
         }
         
         private static void FileInfo()
@@ -23,17 +24,16 @@ namespace DailymotionVideoUploadConsole
 
             foreach (var item in DI.GetFiles())
             {
-                Console.WriteLine("Klasör --> " + @"C:\Users\Onur\Downloads\dmvideolar\" + " - Dosya Adı -->" + item.Name + " - Yükleniyor...");
+                Console.WriteLine("Klasör --> " + @"C:\Users\Onur\Downloads\dmvideolar\" + " - Dosya Adi -->" + item.Name);
                 //return item.DirectoryName + "\\" + item.Name;
 
                 var vLocalVideoPath = item.DirectoryName + "\\" + item.Name;
 
                 var vVideoName = ValueClipping(item.Name);
-
                 var vVideoUrl = UploadUrl();
                 var vAcilanUrl = UploadVideo(vVideoUrl, vLocalVideoPath);
                 var vVideoId = CreateVideo(vAcilanUrl);
-                PublishVideo(vVideoId, vVideoName, vVideoName, "example tag 1,example tag 2,example tag 3");
+                PublishVideo(vVideoId, vVideoName, vVideoName,"example tag 1,example tag 2,example tag 3");
                 FileMove(item.Name);
             }
         }
@@ -41,7 +41,6 @@ namespace DailymotionVideoUploadConsole
         private static void FileMove(string sUploadedVideoPath)
         {
             File.Move(@"C:\Users\Onur\Downloads\dmvideolar\"+ sUploadedVideoPath + "", @"C:\Users\Onur\Downloads\yuklenendmvideolar\" + sUploadedVideoPath + "");//Dosya kopyalanmaz komple taşınır.
-            Console.WriteLine("Klasör --> " + "Video yüklenenler klasörüne taşındı." + " - Dosya Adı -->" + sUploadedVideoPath + " - Yükleme Tamamlandı" + "\n");
         }
 
         private static string ValueClipping(string sValue)
@@ -63,9 +62,9 @@ namespace DailymotionVideoUploadConsole
             var client = new RestClient("https://api.dailymotion.com/file/upload");
             client.Options.Timeout = -1;
             var request = new RestRequest();
-            request.AddHeader("Authorization", "Bearer ZmYDYikYV2FcIy86O1N4Si4WMCIgHjsiN1UwJn56AV1V");
+            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
             RestResponse response = client.Execute(request);
-            Console.WriteLine(" - Durum -->" + " - (2) =Upload Url= işlemi tamamlandı...");
+            //Console.WriteLine(response.Content);
 
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
             return obj.upload_url;
@@ -79,7 +78,7 @@ namespace DailymotionVideoUploadConsole
             request.Method = Method.Post;
             request.AddFile("file", @""+sLocalVideoPath);
             RestResponse response = client.Execute(request);
-            Console.WriteLine(" - Durum -->" + " - (3) =Video Upload= işlemi tamamlandı...");
+            Console.WriteLine(response.Content);
 
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
             return obj.url;
@@ -91,14 +90,13 @@ namespace DailymotionVideoUploadConsole
             client.Options.Timeout = -1;
             var request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("Authorization", "Bearer ZmYDYikYV2FcIy86O1N4Si4WMCIgHjsiN1UwJn56AV1V");
+            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
             request.AlwaysMultipartFormData = true;
             request.AddParameter("url", sAcilanUrl);
             RestResponse response = client.Execute(request);
-            Console.WriteLine(" - Durum -->" + " - (4) =Create= işlemi tamamlandı...");
+            Console.WriteLine(response.Content);
 
             ApiObject obj = JsonConvert.DeserializeObject<ApiObject>(response.Content);
-            
             return obj.id;
         }
 
@@ -108,7 +106,7 @@ namespace DailymotionVideoUploadConsole
             client.Options.Timeout = -1;
             var request = new RestRequest();
             request.Method = Method.Post;
-            request.AddHeader("Authorization", "Bearer ZmYDYikYV2FcIy86O1N4Si4WMCIgHjsiN1UwJn56AV1V");
+            request.AddHeader("Authorization", "Bearer YW92eRIgMU9bAAdyGEF1HS8YW1NaThsoTEk3JxhiQzd7");
             request.AlwaysMultipartFormData = true;
             request.AddParameter("published", "true");
             request.AddParameter("title", sVideoTitle);
@@ -117,7 +115,7 @@ namespace DailymotionVideoUploadConsole
             request.AddParameter("channel", "tv");
             request.AddParameter("is_created_for_kids", "false");
             RestResponse response = client.Execute(request);
-            Console.WriteLine(" - Durum -->" + " - (5) =Publish= işlemi tamamlandı...");
+            Console.WriteLine(response.Content);
         }
     }
 }
